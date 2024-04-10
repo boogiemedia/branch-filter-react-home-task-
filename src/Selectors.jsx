@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled, InputLabel, MenuItem, FormControl, Select, NativeSelect, InputBase } from '@mui/material/';
+import {styled, InputLabel, MenuItem, FormControl, Select, NativeSelect, InputBase, Box} from '@mui/material/';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
@@ -21,8 +21,12 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 export const Selectors = ({ branches, selectedArea, setSelectedArea, selectedCity, setSelectedCity, searchText, setSearchText }) => {
-    const areas = ['הכל', ...new Set(branches.map(branch => branch.store_region))];
-    const cities = ['הכל', ...new Set(branches.filter(branch => selectedArea === 'הכל' || branch.store_region === selectedArea).map(branch => branch.city))];
+    const areas = ['הכל', ...new Set(branches.map(branch => branch.store_region).sort((a, b)=>parseInt(a)-parseInt(b)))];
+
+    const cit = new Set(branches.filter((branch)=>selectedArea === 'הכל' || branch.store_region === selectedArea).map((r)=>r.city.trim()))
+    console.log(cit);
+
+    const cities = ['הכל', ...cit];
 
     const handleAreaChange = (event) => {
         setSelectedArea(event.target.value);
@@ -45,7 +49,7 @@ export const Selectors = ({ branches, selectedArea, setSelectedArea, selectedCit
     };
 
     return (
-        <div>
+        <Box flexDirection='row-reverse' display="flex">
             <FormControl sx={{ m: 1 }} variant="standard">
                 <InputLabel htmlFor="search-box">חיפוש</InputLabel>
                 <BootstrapInput id="search-box" value={searchText} onChange={handleSearchChange} />
@@ -60,7 +64,7 @@ export const Selectors = ({ branches, selectedArea, setSelectedArea, selectedCit
                 >
                     <option aria-label="None" value="" />
                     {cities.map(city => (
-                        <option value={city}>{city}</option>
+                        <option key={city} value={city}>{city}</option>
                     ))}
                 </NativeSelect>
             </FormControl>
@@ -75,10 +79,10 @@ export const Selectors = ({ branches, selectedArea, setSelectedArea, selectedCit
                     input={<BootstrapInput />}
                 >
                     {areas.map(area => (
-                        <MenuItem value={area}>{area}</MenuItem>
+                        <MenuItem key={area} value={area}>{area}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
-        </div>
+        </Box>
     )
 }

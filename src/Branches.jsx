@@ -4,7 +4,7 @@ import {Table,TableBody, TableCell, TableContainer, TableHead, TableRow, Paper }
 export const Branches = ({ branches, selectedArea, selectedCity, searchText }) => {
     const filteredBranches = branches.filter(branch =>
         (selectedArea === 'הכל' || selectedArea === '' || branch.store_region === selectedArea) &&
-        (selectedCity === 'הכל' || selectedCity === '' || branch.city === selectedCity) &&
+        (selectedCity === 'הכל' || selectedCity === '' || branch.city.trim() === selectedCity.trim()) &&
         (searchText === '' ||
             branch.store_title.includes(searchText) ||
             branch.store_address.includes(searchText) ||
